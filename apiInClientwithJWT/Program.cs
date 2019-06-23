@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using apiInClientwithJWT.DAL;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -23,6 +18,8 @@ namespace apiInClientwithJWT
             {
                 var services = scope.ServiceProvider;
                 var hostingEnvironment = services.GetService<IHostingEnvironment>();
+                var context = services.GetRequiredService<ApiContext>();
+                DbInitializer.Initialize(context);
                 Log.Logger = new LoggerConfiguration()
                         .MinimumLevel.Debug()
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -32,7 +29,7 @@ namespace apiInClientwithJWT
             }
             try
             {
-                Log.Information("Starting Web Host");
+                Log.Information("Starting Web Host");                
                 host.Run();
             }
             catch (Exception ex)
